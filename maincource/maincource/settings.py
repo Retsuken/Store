@@ -117,11 +117,11 @@ WSGI_APPLICATION = 'maincource.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'store_db',
-        'USER': 'postgres',
-        'PASSWORD': '123123',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': ''
     }
 }
 
@@ -177,7 +177,7 @@ LOGOUT_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'vovazaxvatkin0p@gmail.com'
+EMAIL_HOST_USER = 'email'
 EMAIL_HOST_PASSWORD = 'ibqmexcsfrqtycxs' # your 16-character app password
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
