@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - FashionStore</title>
+    <link rel="stylesheet" href="{% static 'users/css/auth.css' %}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>FashionStore</h1>
+                <p class="subtitle">Создайте новый аккаунт</p>
+            </div>
+
+            {% if error %}
+            <div class="error-message">{{ error }}</div>
+            {% endif %}
+
+            {% if success %}
+            <div class="success-message">{{ success }}</div>
+            {% endif %}
+
+            <form method="post" action="/register/" class="auth-form" id="registerForm">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first_name">Имя</label>
+                        <input type="text" id="first_name" name="first_name" placeholder="Иван" value="{{ form_data.first_name|default:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Фамилия</label>
+                        <input type="text" id="last_name" name="last_name" placeholder="Иванов" value="{{ form_data.last_name|default:'' }}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" placeholder="user@example.com" value="{{ form_data.email|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Имя пользователя *</label>
+                    <input type="text" id="username" name="username" placeholder="username" value="{{ form_data.username|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone_number">Телефон</label>
+                    <input type="tel" id="phone_number" name="phone_number" placeholder="+79001234567" value="{{ form_data.phone_number|default:'' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль *</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Минимум 8 символов" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('password')">👁️</button>
+                    </div>
+                    <div class="password-strength" id="passwordStrength"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password2">Подтвердите пароль *</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password2" name="password2" placeholder="Повторите пароль" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('password2')">👁️</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="user_type">Тип аккаунта</label>
+                    <select id="user_type" name="user_type">
+                        <option value="customer" {% if form_data.user_type == 'customer' %}selected{% endif %}>Покупатель</option>
+                        <option value="seller" {% if form_data.user_type == 'seller' %}selected{% endif %}>Продавец</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_of_birth">Дата рождения</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" value="{{ form_data.date_of_birth|default:'' }}">
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display:none;"></div>
+                <div id="successMessage" class="success-message" style="display:none;"></div>
+
+                <button type="submit" class="btn-primary" id="registerBtn">
+                    <span id="registerText">Зарегистрироваться</span>
+                    <span id="registerSpinner" class="spinner" style="display:none;"></span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Уже есть аккаунт? <a href="/login/">Войти</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '{{ api_base_url }}';
+    </script>
+    <script src="{% static 'users/js/auth.js' %}"></script>
+</body>
+</html>

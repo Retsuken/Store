@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - FashionStore</title>
+    <link rel="stylesheet" href="{% static 'users/css/auth.css' %}">
+</head>
+<body>
+    <div class="profile-container">
+        <nav class="profile-nav">
+            <div class="nav-brand">FashionStore</div>
+            <div class="nav-links">
+                <a href="/profile/" class="active">Профиль</a>
+                <a href="/logout/">Выйти</a>
+            </div>
+        </nav>
+
+        <div class="profile-content">
+            <div class="profile-sidebar">
+                <div class="profile-avatar">
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar }}" alt="Avatar">
+                    {% else %}
+                        <div class="avatar-placeholder">
+                            {{ user.first_name|first|default:user.username|first|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+                <h2 class="profile-name">{{ user.full_name|default:user.username }}</h2>
+                <p class="profile-email">{{ user.email }}</p>
+                <span class="user-badge badge-{{ user.user_type }}">
+                    {{ user.get_user_type_display }}
+                </span>
+                <div class="profile-actions">
+                    <button onclick="location.reload()" class="btn-secondary">Обновить</button>
+                    <button onclick="logoutUser()" class="btn-danger">Выйти</button>
+                </div>
+            </div>
+
+            <div class="profile-main">
+                <div class="profile-card">
+                    <h3>Личная информация</h3>
+                    <form id="profileForm" class="profile-form">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="first_name">Имя</label>
+                                <input type="text" id="first_name" name="first_name" value="{{ user.first_name|default:'' }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Фамилия</label>
+                                <input type="text" id="last_name" name="last_name" value="{{ user.last_name|default:'' }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone_number">Телефон</label>
+                            <input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number|default:'' }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date_of_birth">Дата рождения</label>
+                            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ user.date_of_birth|default:'' }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bio">О себе</label>
+                            <textarea id="bio" name="bio" rows="3">{{ user.bio|default:'' }}</textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="telegram">Telegram</label>
+                                <input type="url" id="telegram" name="telegram" value="{{ user.telegram|default:'' }}" placeholder="https://t.me/username">
+                            </div>
+                            <div class="form-group">
+                                <label for="instagram">Instagram</label>
+                                <input type="url" id="instagram" name="instagram" value="{{ user.instagram|default:'' }}" placeholder="https://instagram.com/username">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="updateProfileBtn">
+                            <span id="updateText">Обновить профиль</span>
+                            <span id="updateSpinner" class="spinner" style="display:none;"></span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="profile-card">
+                    <h3>Настройки профиля</h3>
+                    <form id="settingsForm" class="profile-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="newsletter_subscribed" 
+                                       {% if user.profile.newsletter_subscribed %}checked{% endif %}>
+                                Подписаться на новости
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="receive_promotions" 
+                                       {% if user.profile.receive_promotions %}checked{% endif %}>
+                                Получать акции и спецпредложения
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="receive_order_updates" 
+                                       {% if user.profile.receive_order_updates %}checked{% endif %}>
+                                Получать обновления по заказам
+                            </label>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="profile-card">
+                    <h3>Изменить пароль</h3>
+                    <form id="passwordForm" class="profile-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="old_password">Текущий пароль</label>
+                            <input type="password" id="old_password" name="old_password" placeholder="Введите текущий пароль">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_password">Новый пароль</label>
+                            <input type="password" id="new_password" name="new_password" placeholder="Минимум 8 символов">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_password2">Подтвердите новый пароль</label>
+                            <input type="password" id="new_password2" name="new_password2" placeholder="Повторите новый пароль">
+                        </div>
+                        <button type="submit" class="btn-primary" id="changePasswordBtn">
+                            <span id="changePassText">Изменить пароль</span>
+                            <span id="changePassSpinner" class="spinner" style="display:none;"></span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="profile-card danger-zone">
+                    <h3>Опасная зона</h3>
+                    <p>Удаление аккаунта необратимо. Все данные будут потеряны.</p>
+                    <button onclick="deleteAccount()" class="btn-danger">Удалить аккаунт</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '{{ api_base_url }}';
+        const userData = {{ user|safe }};
+    </script>
+    <script src="{% static 'users/js/auth.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение email - FashionStore</title>
+    <link rel="stylesheet" href="{% static 'users/css/auth.css' %}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>FashionStore</h1>
+                <p class="subtitle">Подтверждение email</p>
+            </div>
+
+            <div class="verify-content">
+                {% if success %}
+                    <div class="success-icon">✅</div>
+                    <h2>Email подтвержден!</h2>
+                    <p>Ваш email успешно подтвержден. Теперь вы можете войти в свой аккаунт.</p>
+                    <a href="/login/" class="btn-primary">Войти</a>
+                {% elif error %}
+                    <div class="error-icon">❌</div>
+                    <h2>Ошибка подтверждения</h2>
+                    <p>{{ error }}</p>
+                    <a href="/login/" class="btn-primary">Вернуться к входу</a>
+                {% else %}
+                    <div class="loading-spinner"></div>
+                    <h2>Проверка...</h2>
+                    <p>Пожалуйста, подождите, мы проверяем ваш токен.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

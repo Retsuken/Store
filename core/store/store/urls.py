@@ -22,11 +22,61 @@ from django.conf import settings
 
 from django.conf.urls.static import static
 
+from django.views.generic import TemplateView
+
+from rest_framework import permissions
+
+from drf_yasg.views import get_schema_view
+
+from drf_yasg import openapi
+
+
+from core.api.v1.users.views import (
+    
+    # Page Views (HTML)
+    LoginPageView,
+    RegisterPageView,
+    ProfilePageView,
+    VerifyEmailPageView,
+    PasswordResetPageView,
+    LogoutPageView,
+)
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="FashionStore API",
+        default_version='v1',
+        description="API for FashionStore E-Commerce Platform",
+        contact=openapi.Contact(email="support@fashionstore.com"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('core.api.urls')),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('home', TemplateView.as_view(template_name='index.html'), name='home'),
+    path('products', TemplateView.as_view(template_name='products.html'), name='product'),
+        # Auth pages
+    path('', LoginPageView.as_view(), name='home'),
+    path('login/', LoginPageView.as_view(), name='login_page'),
+    path('register/', RegisterPageView.as_view(), name='register_page'),
+    path('profile/', ProfilePageView.as_view(), name='profile_page'),
+    path('verify-email/', VerifyEmailPageView.as_view(), name='verify_email_page'),
+    path('reset-password/', PasswordResetPageView.as_view(), name='reset_password_page'),
+    path('logout/', LogoutPageView.as_view(), name='logout_page'),
 
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+
+

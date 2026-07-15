@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в FashionStore</title>
+    <link rel="stylesheet" href="{% static 'users/css/auth.css' %}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>FashionStore</h1>
+                <p class="subtitle">Войдите в свой аккаунт</p>
+            </div>
+
+            {% if error %}
+            <div class="error-message">{{ error }}</div>
+            {% endif %}
+
+            {% if success %}
+            <div class="success-message">{{ success }}</div>
+            {% endif %}
+
+            <form method="post" action="/login/" class="auth-form" id="loginForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="user@example.com" value="{{ form_data.email|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Введите пароль" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        Запомнить меня
+                    </label>
+                    <a href="/reset-password/" class="forgot-link">Забыли пароль?</a>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display:none;"></div>
+                <div id="successMessage" class="success-message" style="display:none;"></div>
+
+                <button type="submit" class="btn-primary" id="loginBtn">
+                    <span id="loginText">Войти</span>
+                    <span id="loginSpinner" class="spinner" style="display:none;"></span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Нет аккаунта? <a href="/register/">Зарегистрироваться</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '{{ api_base_url }}';
+    </script>
+    <script src="{% static 'users/js/auth.js' %}"></script>
+</body>
+</html>
