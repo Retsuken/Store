@@ -42,6 +42,8 @@ from core.api.v1.users.views import (
     LogoutPageView,
 )
 
+from core.api.v1.product.views import ProductsPageView, ProductDetailPageView
+
 schema_view = get_schema_view(
     openapi.Info(
         title="FashionStore API",
@@ -57,12 +59,14 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.api.urls')),
+    path('api', include('core.api.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('home', TemplateView.as_view(template_name='index.html'), name='home'),
     path('products', TemplateView.as_view(template_name='products.html'), name='product'),
+    
         # Auth pages
+
     path('', LoginPageView.as_view(), name='home'),
     path('login/', LoginPageView.as_view(), name='login_page'),
     path('register/', RegisterPageView.as_view(), name='register_page'),
@@ -70,6 +74,11 @@ urlpatterns = [
     path('verify-email/', VerifyEmailPageView.as_view(), name='verify_email_page'),
     path('reset-password/', PasswordResetPageView.as_view(), name='reset_password_page'),
     path('logout/', LogoutPageView.as_view(), name='logout_page'),
+
+        #Products
+
+    path('products', ProductsPageView.as_view(), name='products'),
+    path('products/<slug:slug>/', ProductDetailPageView.as_view(), name='product_detail'),
 
 ]
 

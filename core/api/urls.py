@@ -15,6 +15,17 @@ from .v1.users.views import (
     
 )
 
+from .v1.product.views import (
+    ProductListView,
+    ProductDetailView,
+    CategoryListView,
+    FeaturedProductsView,
+    AddToCartView,
+    GetCartView,
+    UpdateCartView,
+    ClearCartView,
+)
+
 app_name = 'api_v1'
 
 urlpatterns = [
@@ -37,6 +48,18 @@ urlpatterns = [
     path('api/v1/profile/', ProfileAPIView.as_view(), name='api_profile'),
     path('api/v1/profile/delete/', DeleteAccountAPIView.as_view(), name='api_delete_account'),
     
-    # ==================== PAGE ENDPOINTS (HTML) ====================
     
+    # Public endpoints
+    path('api/v1/products-list', ProductListView.as_view(), name='product_list'),
+    path('featured/', FeaturedProductsView.as_view(), name='featured_products'),
+    path('categories/', CategoryListView.as_view(), name='category_list'),
+    
+    # Cart endpoints (authenticated)
+    path('cart/', GetCartView.as_view(), name='cart_detail'),
+    path('cart/add/', AddToCartView.as_view(), name='cart_add'),
+    path('cart/update/', UpdateCartView.as_view(), name='cart_update'),
+    path('cart/clear/', ClearCartView.as_view(), name='cart_clear'),
+
+    path('<slug:slug>/', ProductDetailView.as_view(), name='product_detail'),
+
 ]
